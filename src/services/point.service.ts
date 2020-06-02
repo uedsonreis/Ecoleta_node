@@ -40,18 +40,20 @@ class PointService {
     public async save(point: Point): Promise<number> {
         const trx = await repositories.getTransaction()
 
+        const saved = {
+            image: point.image,
+            name: point.name,
+            email: point.email,
+            whatsapp: point.whatsapp,
+            latitude: point.latitude,
+            longitude: point.longitude,
+            city: point.city.toUpperCase(),
+            uf: point.uf.toUpperCase(),
+        }
+
         try {
-            const insertedIds = await repositories.getPointRepository().transacting(trx).insert({
-                image: point.image,
-                name: point.name,
-                email: point.email,
-                whatsapp: point.whatsapp,
-                latitude: point.latitude,
-                longitude: point.longitude,
-                city: point.city.toUpperCase(),
-                uf: point.uf.toUpperCase(),
-            })
-    
+            const insertedIds = await repositories.getPointRepository().transacting(trx).insert(saved).returning('id')
+
             const id = insertedIds[0]
     
             const pointItems = point.items.map(item => ({

@@ -1,5 +1,7 @@
 import { Request, Response } from "express"
 
+import { HttpCodes } from '../config/utils'
+
 import pointService from '../services/point.service'
 import { Point } from "../entities/point"
 
@@ -12,7 +14,7 @@ class PointController {
             return response.json(points)
         } catch (error) {
             console.error('PointController.index error: ', error)
-            return response.send(error.message)
+            return response.status(HttpCodes.BAD_REQUEST).send(error.message)
         }
     }
 
@@ -21,9 +23,9 @@ class PointController {
         try {
             const point = await pointService.get(Number(id))
             if (point) {
-                return response.json(point)
+                return response.status(HttpCodes.OK).json(point)
             } else {
-                return response.status(400).json({ message: 'Point not found.' })
+                return response.status(HttpCodes.BAD_REQUEST).json({ message: 'Point not found.' })
             }
         } catch (error) {
             console.error('PointController.show error: ', error)
@@ -35,10 +37,10 @@ class PointController {
         try {
             const point: Point = request.body
             const id = await pointService.save(point)
-            response.json({ id })
+            response.status(HttpCodes.CREATED).json({ id })
         } catch (error) {
             console.error('PointController.save error: ', error)
-            response.send(error.message)
+            response.status(HttpCodes.BAD_REQUEST).send(error.message)
         }
     }
 
@@ -46,10 +48,10 @@ class PointController {
         try {
             const { id } = request.params
             await pointService.delete(Number(id))
-            response.json({ deleted: true })
+            response.status(HttpCodes.OK).json({ deleted: true })
         } catch (error) {
             console.error('PointController.delete error: ', error)
-            response.send(error.message)
+            response.status(HttpCodes.BAD_REQUEST).send(error.message)
         }
     }
 

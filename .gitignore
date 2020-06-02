@@ -1,3 +1,4 @@
-src/database/database.sqlite
+src/config/database/database.sqlite
 node_modules
 build
+.env

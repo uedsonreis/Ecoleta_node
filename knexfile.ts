@@ -1,15 +1,21 @@
 import path from 'path'
 
+import env from './src/config/env'
+
 module.exports = {
-    client: 'sqlite3',
+    client: 'pg',
+    version: '12',
     useNullAsDefault: true,
     connection: {
-        filename: path.resolve(__dirname, 'src', 'database', 'database.sqlite')
+        host: env.host,
+        user: env.user,
+        password: env.password,
+        database: env.database
     },
     migrations: {
-        directory: path.resolve(__dirname, 'src', 'database', 'migrations')
+        directory: path.resolve(__dirname, 'src', 'config', 'database', 'migrations')
     },
     seeds: {
-        directory: path.resolve(__dirname, 'src', 'database', 'seeds')
+        directory: path.resolve(__dirname, 'src', 'config', 'database', 'seeds')
     }
 }

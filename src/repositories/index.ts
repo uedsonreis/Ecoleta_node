@@ -1,4 +1,4 @@
-import session from '../database/connections'
+import session from '../config/database/connections'
 
 class Repositories {
 
