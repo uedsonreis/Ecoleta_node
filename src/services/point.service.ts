@@ -17,18 +17,6 @@ class PointService {
             .distinct()
         .select('points.*')
 
-        for (let point of points) {
-            const itemsDB = await repositories.getItemRepository()
-                .join('point_items', 'items.id', '=', 'point_items.item_id')
-                .where('point_items.point_id', point.id)
-                .distinct()
-            .select('items.*')
-
-            point.items = itemsDB
-        }
-
-        console.log('Saindo...')
-
         return points
     }
 
