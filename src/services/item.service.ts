@@ -8,7 +8,7 @@ class ItemService {
 
         const serializedItems = items.map(item => ({
             id: item.id, title: item.title,
-            imageUrl: `http://localhost:3333/uploads/${item.image}`
+            imageUrl: `http://192.168.0.25:3333/uploads/${item.image}`
         }))
 
         return serializedItems
