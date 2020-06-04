@@ -25,13 +25,10 @@ class PointService {
 
         if (!point) return undefined
 
-        console.log('PI: ', await repositories.getPointItemRepository().select('*'))
-
         const items: Item[] = await repositories.getItemRepository()
             .join('point_items', 'items.id', '=', 'point_items.item_id')
             .where('point_items.point_id', id).select(['items.id', 'items.title', 'items.image'])
 
-        console.log('I: ', items)
         point.items = items
 
         return point
