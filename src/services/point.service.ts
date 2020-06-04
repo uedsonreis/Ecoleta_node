@@ -9,7 +9,7 @@ class PointService {
 
         const parsedItems = String(items).split(',').map(item => Number(item.trim()))
 
-        const points = await repositories.getPointRepository()
+        const points: Point[] = await repositories.getPointRepository()
             .join('point_items', 'points.id', '=', 'point_items.point_id')
             .whereIn('point_items.item_id', parsedItems)
             .where('city', String(city).toUpperCase())
