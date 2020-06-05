@@ -4,6 +4,8 @@ import userController from './controllers/user.controller'
 import itemController from './controllers/item.controller'
 import pointController from './controllers/point.controller'
 
+import upload from './config/file.upload'
+
 const routes = express.Router()
 
 routes.get('/users', userController.getAll)
@@ -14,6 +16,6 @@ routes.get('/items', itemController.index)
 
 routes.get('/points', pointController.index)
 routes.get('/points/:id', pointController.show)
-routes.post('/points', pointController.create)
+routes.post('/points', upload.single('image'), pointController.validate, pointController.create)
 
 export default routes

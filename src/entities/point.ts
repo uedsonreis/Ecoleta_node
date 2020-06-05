@@ -12,6 +12,6 @@ export class Point {
     public uf!: string
     public city!: string
 
-    public items!: Item[]
+    public items!: any
 
 }

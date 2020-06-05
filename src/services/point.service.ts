@@ -2,6 +2,7 @@ import repositories from '../repositories'
 
 import { Point } from '../entities/point'
 import { Item } from '../entities/item'
+import { serializeImage, serializeImages } from '../utils'
 
 class PointService {
 
@@ -17,7 +18,7 @@ class PointService {
             .distinct()
         .select('points.*')
 
-        return points
+        return serializeImages(points)
     }
 
     public async get(id: number) {
@@ -25,13 +26,15 @@ class PointService {
 
         if (!point) return undefined
 
+        const serializedPoint: any = serializeImage(point)
+
         const items: Item[] = await repositories.getItemRepository()
             .join('point_items', 'items.id', '=', 'point_items.item_id')
             .where('point_items.point_id', id).select(['items.id', 'items.title', 'items.image'])
 
-        point.items = items
+        serializedPoint.items = items
 
-        return point
+        return serializedPoint
     }
 
     public async save(point: Point): Promise<number> {
@@ -42,8 +45,8 @@ class PointService {
             name: point.name,
             email: point.email,
             whatsapp: point.whatsapp,
-            latitude: point.latitude,
-            longitude: point.longitude,
+            latitude: Number(point.latitude),
+            longitude: Number(point.longitude),
             city: point.city.toUpperCase(),
             uf: point.uf.toUpperCase(),
         }
@@ -52,16 +55,16 @@ class PointService {
             const insertedIds = await repositories.getPointRepository().transacting(trx).insert(saved).returning('id')
 
             const id = insertedIds[0]
+
+            const arrayItemId = String(point.items).split(',').map(itemId => Number(itemId.trim()))
     
-            const pointItems = point.items.map(item => ({
+            const pointItems = arrayItemId.map(itemId => ({
                 point_id: id,
-                item_id: item.id
+                item_id: itemId
             }))
-    
             await repositories.getPointItemRepository().transacting(trx).insert(pointItems)
 
             await trx.commit()
-
             return id
             
         } catch (error) {
